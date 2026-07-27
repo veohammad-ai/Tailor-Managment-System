@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailor Flow PK - Management Dashboard</title>
+    <!-- Dashicons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dashicons/2.0.11/css/dashicons.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0b0f19;
+            font-family: "Inter", sans-serif;
+            color: #ffffff;
+        }
+        /* Mobile adjustment */
+        @media (max-width: 768px) {
+            .tf-app .tf-sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                height: 100vh;
+                margin-top: 0;
+            }
+            .tf-app .tf-sidebar.open {
+                transform: translateX(0);
+            }
+            .tf-app .tf-mobile-header {
+                display: flex;
+            }
+            .tf-app .tf-main-content {
+                padding-top: 60px;
+            }
+        }
+        .tf-mobile-only {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .tf-mobile-only {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- LOGIN SCREEN -->
+<div id="tf-login-wrapper" class="tf-app" style="display: block; min-height: 100vh; background: #0f121d; display: flex; align-items: center; justify-content: center; padding: 20px;">
+	<div id="tailor-flow-app" class="tf-app tf-app-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0f121d; padding: 20px;">
+		<div class="tf-glass-card" style="width: 100%; max-width: 440px; padding: 36px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(31, 36, 51, 0.85); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+			<div style="text-align: center; margin-bottom: 28px;">
+				<div style="width: 64px; height: 64px; background: linear-gradient(135deg, #6366f1, #3b82f6); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);">
+					<span class="dashicons dashicons-welcome-write-blog" style="font-size: 32px; width: 32px; height: 32px; color: #ffffff;"></span>
+				</div>
+				<h2 style="color: #ffffff; margin: 0 0 6px 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;"><span class="tf-dynamic-shop-name-upper">TAILOR FLOW PK</span></h2>
+				<p style="color: #9ca3af; margin: 0; font-size: 13px;">Professional Custom Tailoring Management System</p>
+			</div>
+
+			<form id="tf-app-login-form">
+				<div id="tf-login-notice" class="tf-notice" style="display: none; margin-bottom: 16px;"></div>
+
+				<div class="tf-form-group" style="margin-bottom: 18px;">
+					<label for="tf-app-login-username" style="color: #cbd5e1; font-weight: 500; font-size: 13px; margin-bottom: 6px; display: block;">Username or Email Address</label>
+					<input type="text" id="tf-app-login-username" class="tf-input" placeholder="Enter your username or email" required style="width: 100%; height: 44px; padding: 0 14px; background: #1f2433; color: #ffffff; border: 1px solid #40465a; border-radius: 8px;">
+				</div>
+
+				<div class="tf-form-group" style="margin-bottom: 20px;">
+					<label for="tf-app-login-password" style="color: #cbd5e1; font-weight: 500; font-size: 13px; margin-bottom: 6px; display: block;">Password</label>
+					<input type="password" id="tf-app-login-password" class="tf-input" placeholder="Enter your password" required style="width: 100%; height: 44px; padding: 0 14px; background: #1f2433; color: #ffffff; border: 1px solid #40465a; border-radius: 8px;">
+				</div>
+
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+					<label style="color: #9ca3af; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+						<input type="checkbox" id="tf-app-login-remember" checked style="accent-color: #6366f1;"> Keep me logged in
+					</label>
+				</div>
+
+				<button type="submit" id="tf-app-login-btn" class="tf-btn tf-btn-accent" style="width: 100%; height: 46px; border-radius: 8px; font-size: 15px; font-weight: 600; background: linear-gradient(135deg, #6366f1, #3b82f6); border: none; color: #ffffff; cursor: pointer; transition: all 0.2s ease;">
+					<span class="dashicons dashicons-lock" style="font-size: 18px; width: 18px; height: 18px; vertical-align: middle; margin-right: 6px;"></span> Sign In to Tailor Flow
+				</button>
+			</form>
+
+			<div style="text-align: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06);">
+				<small style="color: #64748b; font-size: 11px;">Designed and Developed by <strong style="color: #94a3b8;">Hammad Memon</strong></small>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- DASHBOARD SHELL -->
+<div id="tf-dashboard-wrapper" style="display: none; width: 100%;">
+<div id="tailor-flow-app" class="tf-app tf-app-container">
+	<!-- Mobile Top Bar -->
+	<header class="tf-mobile-header">
+		<button id="tf-mobile-toggle" class="tf-btn-icon" aria-label="Toggle Navigation">
+			<span class="dashicons dashicons-menu-alt3"></span>
+		</button>
+		<div class="tf-mobile-brand">
+			<span class="dashicons dashicons-forms tf-brand-icon"></span>
+			<span class="tf-brand-name"><span class="tf-dynamic-shop-name">Tailor Flow PK</span></span>
+		</div>
+	</header>
+
+	<!-- Sidebar Navigation -->
+	<aside id="tf-sidebar" class="tf-sidebar">
+		<div class="tf-sidebar-header">
+			<div class="tf-brand">
+				<div class="tf-brand-logo">
+					<span class="dashicons dashicons-forms"></span>
+				</div>
+				<div class="tf-brand-text">
+					<h2 class="tf-dynamic-split-title">Tailor <span>Flow PK</span></h2>
+					<p><span class="tf-dynamic-user-role">Owner</span> Portal</p>
+				</div>
+			</div>
+			<button id="tf-sidebar-close" class="tf-btn-icon tf-mobile-only" aria-label="Close Sidebar">
+				<span class="dashicons dashicons-no-alt"></span>
+			</button>
+		</div>
+
+		<nav class="tf-sidebar-nav">
+			<ul>
+				<li class="tf-nav-item active" data-tab="overview">
+					<a href="#overview">
+						<span class="dashicons dashicons-dashboard"></span>
+						<span class="tf-nav-label">Overview</span>
+					</a>
+				</li>
+
+				
+					<li class="tf-nav-item" data-tab="new-order">
+						<a href="#new-order">
+							<span class="dashicons dashicons-plus-alt2"></span>
+							<span class="tf-nav-label">New Order</span>
+						</a>
+					</li>
+				
+
+				
+					<li class="tf-nav-item" data-tab="customers">
+						<a href="#customers">
+							<span class="dashicons dashicons-admin-users"></span>
+							<span class="tf-nav-label">Customers</span>
+						</a>
+					</li>
+				
+
+				
+					<li class="tf-nav-item" data-tab="karigar-ledger">
+						<a href="#karigar-ledger">
+							<span class="dashicons dashicons-groups"></span>
+							<span class="tf-nav-label">Karigar Ledger</span>
+						</a>
+					</li>
+				
+
+				
+					<li class="tf-nav-item" data-tab="reports">
+						<a href="#reports">
+							<span class="dashicons dashicons-chart-bar"></span>
+							<span class="tf-nav-label">Reports</span>
+						</a>
+					</li>
+				
+
+				
+					<li class="tf-nav-item" data-tab="user-roles">
+						<a href="#user-roles">
+							<span class="dashicons dashicons-shield"></span>
+							<span class="tf-nav-label">User Roles</span>
+						</a>
+					</li>
+				
+
+				
+					<li class="tf-nav-item" data-tab="settings">
+						<a href="#settings">
+							<span class="dashicons dashicons-admin-settings"></span>
+							<span class="tf-nav-label">Settings</span>
+						</a>
+					</li>
+				
+
+				
+					<li class="tf-nav-item tf-nav-logout" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+						<a href="#logout" id="tf-app-logout-link" style="color: #f87171;">
+							<span class="dashicons dashicons-exit" style="color: #f87171;"></span>
+							<span class="tf-nav-label">Logout</span>
+						</a>
+					</li>
+			</ul>
+		</nav>
+
+		<div class="tf-sidebar-footer">
+			<div class="tf-developer-credit">
+				<span class="dashicons dashicons-heart"></span>
+				<p>Designed and Developed by <strong>Hammad Memon</strong></p>
+			</div>
+		</div>
+	</aside>
+
+	<!-- Main Content Area -->
+	<main class="tf-main-content">
+		<!-- Top Bar Header -->
+		<header class="tf-header">
+			<div class="tf-header-search" style="position: relative;">
+				<span class="dashicons dashicons-search"></span>
+				<input type="text" id="tf-global-search-input" placeholder="Search by Name, Username, Mobile..." autocomplete="off">
+				<div id="tf-global-search-dropdown" class="tf-glass-card" style="display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 1000; margin-top: 8px; max-height: 350px; overflow-y: auto; padding: 12px; border: 1px solid var(--tf-border-color); background: #151824;"></div>
+			</div>
+			<div class="tf-header-actions">
+				
+					<button class="tf-btn tf-btn-accent" data-switch-tab="new-order">
+						<span class="dashicons dashicons-plus"></span>
+						<span>New Order</span>
+					</button>
+				
+				<div class="tf-user-badge">
+					<span class="tf-avatar"></span>
+					<span class="tf-user-name"><span class="tf-dynamic-user-name">Hammad Memon</span> (<span class="tf-dynamic-user-role">Owner</span>)</span>
+				</div>
+				
+					<li class="tf-nav-item tf-nav-logout" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+						<a href="#logout" id="tf-app-logout-link" style="color: #f87171;">
+							<span class="dashicons dashicons-exit" style="color: #f87171;"></span>
+							<span class="tf-nav-label">Logout</span>
+						</a>
+					</li>
+			</div>
+		</header>
+
+		<!-- Content Views -->
+		<div class="tf-content-body">
+
+			<!-- TAB 1: OVERVIEW -->
+			<section id="tf-tab-overview" class="tf-tab-content active">
+				<div class="tf-page-header">
+					<div>
+						<h1>Dashboard Overview</h1>
+						<p>Real-time tailoring shop status — Logged in as <strong><span class="tf-dynamic-user-role">Owner</span></strong></p>
+					</div>
+					<div class="tf-date-badge">
+						<span class="dashicons dashicons-calendar-alt"></span>
+						<span></span>
+					</div>
+				</div>
+
+				<!-- Dashboard Alert Cards (Module 5) -->
+				<div class="tf-stats-grid" style="grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px;">
+					<div class="tf-glass-card tf-stat-card" style="border-left: 4px solid #ef4444; min-height: 100px; padding: 18px; margin-bottom: 0;">
+						<div class="tf-stat-icon" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">
+							<span class="dashicons dashicons-calendar-alt"></span>
+						</div>
+						<div class="tf-stat-details">
+							<span class="tf-stat-label">Delivery Today</span>
+							<h3 class="tf-stat-value" style="color: #f87171; font-size: 1.35rem;"></h3>
+							<span class="tf-stat-trend warning">Scheduled Deliveries</span>
+						</div>
+					</div>
+
+					<div class="tf-glass-card tf-stat-card" style="border-left: 4px solid #f59e0b; min-height: 100px; padding: 18px; margin-bottom: 0;">
+						<div class="tf-stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+							<span class="dashicons dashicons-id"></span>
+						</div>
+						<div class="tf-stat-details">
+							<span class="tf-stat-label">Trial Today</span>
+							<h3 class="tf-stat-value" style="color: #fbbf24; font-size: 1.35rem;"></h3>
+							<span class="tf-stat-trend warning">Fitting Trials Today</span>
+						</div>
+					</div>
+
+					<div class="tf-glass-card tf-stat-card" style="border-left: 4px solid #10b981; min-height: 100px; padding: 18px; margin-bottom: 0;">
+						<div class="tf-stat-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">
+							<span class="dashicons dashicons-yes-alt"></span>
+						</div>
+						<div class="tf-stat-details">
+							<span class="tf-stat-label">Ready for Delivery</span>
+							<h3 class="tf-stat-value" style="color: #34d399; font-size: 1.35rem;"></h3>
+							<span class="tf-stat-trend positive">Ready for Pickup</span>
+						</div>
+					</div>
+
+					<div class="tf-glass-card tf-stat-card" style="border-left: 4px solid #8b5cf6; min-height: 100px; padding: 18px; margin-bottom: 0;">
+						<div class="tf-stat-icon" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa;">
+							<span class="dashicons dashicons-money-alt"></span>
+						</div>
+						<div class="tf-stat-details">
+							<span class="tf-stat-label">Pending Payments</span>
+							<h3 class="tf-stat-value" style="color: #a78bfa; font-size: 1.25rem;">PKR </h3>
+							<span class="tf-stat-trend warning">Uncollected Balance</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Stats Overview Cards (4 Equal Columns) -->
+				<div class="tf-stats-grid" style="grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+					<div class="tf-glass-card tf-stat-card" style="min-height: 100px; padding: 18px; margin-bottom: 0;">
+						<div class="tf-stat-icon icon-blue">
+							<span class="dashicons dashicons-clipboard"></span>
+						</div>
+						<div class="tf-stat-details">
+							<span class="tf-stat-label">Total Orders</span>
+							<h3 class="tf-stat-value" id="tf-overview-total-orders" style="font-size: 1.35rem;"></h3>
+							<span class="tf-stat-trend positive">Active Shop Orders</span>
+						</div>
+					</div>
+
+					<div class="tf-glass-card tf-stat-card" style="min-height: 100px; padding: 18px; margin-bottom: 0;">
+						<div class="tf-stat-icon icon-amber">
+							<span class="dashicons dashicons-clock"></span>
+						</div>
+						<div class="tf-stat-details">
+							<span class="tf-stat-label">Pending Suits</span>
+							<h3 class="tf-stat-value" style="font-size: 1.35rem;"></h3>
+							<span class="tf-stat-trend warning">In Production Queue</span>
+						</div>
+					</div>
+
+					
+						<div class="tf-glass-card tf-stat-card" style="min-height: 100px; padding: 18px; margin-bottom: 0;">
+							<div class="tf-stat-icon icon-green">
+								<span class="dashicons dashicons-groups"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Active Customers</span>
+								<h3 class="tf-stat-value" style="font-size: 1.35rem;"></h3>
+								<span class="tf-stat-trend positive">Registered Profiles</span>
+							</div>
+						</div>
+					
+
+					
+						<div class="tf-glass-card tf-stat-card" style="min-height: 100px; padding: 18px; margin-bottom: 0;">
+							<div class="tf-stat-icon icon-purple">
+								<span class="dashicons dashicons-chart-area"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Total Revenue</span>
+								<h3 class="tf-stat-value" style="font-size: 1.25rem;">PKR </h3>
+								<span class="tf-stat-trend positive">Gross Shop Revenue</span>
+							</div>
+						</div>
+					
+				</div>
+
+				<!-- Recent Orders Grid -->
+				<div class="tf-glass-card" style="margin-top: 20px;">
+					<div class="tf-card-header">
+						<h3>Customer Orders Directory</h3>
+						
+							<button class="tf-btn-link" data-switch-tab="new-order">Add New</button>
+						
+					</div>
+					<div class="tf-table-responsive">
+						<table class="tf-table">
+							<thead>
+								<tr>
+									<th>Order #</th>
+									<th>Customer</th>
+									<th>Garment</th>
+									<th>Delivery</th>
+									<th>Stage</th>
+									
+										<th>Amount</th>
+									
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody id="tf-overview-orders-tbody"></tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+
+			<!-- TAB 2: NEW ORDER -->
+			
+				<section id="tf-tab-new-order" class="tf-tab-content">
+					<div class="tf-page-header">
+						<div>
+							<h1>Create New Tailoring Order</h1>
+							<p>Record customer measurements, cloth details and delivery terms</p>
+						</div>
+					</div>
+
+					<div class="tf-glass-card">
+						<form id="tf-create-order-form" class="tf-form-grid">
+							<div class="tf-form-group col-span-2">
+								<label for="tf-order-customer-id">Select Customer <span class="tf-required">*</span></label>
+								<div style="display: flex; flex-direction: column; gap: 6px;">
+									
+									<select id="tf-order-customer-id" name="customer_id" class="tf-input" required>
+										<option value="">-- Choose Existing Customer --</option>
+									</select>
+								</div>
+							</div>
+
+							
+								<div id="tf-order-measurements-section" class="tf-form-group col-span-2" style="display: none; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; margin-top: 8px;">
+									<h4 style="color: #60a5fa; font-size: 14px; margin: 0 0 12px 0; display: flex; align-items: center; gap: 6px;">
+										<span class="dashicons dashicons-edit"></span> Customer Measurements (Inches)
+									</h4>
+									<div class="tf-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 12px;">
+										<div class="tf-form-group">
+											<label for="tf-order-m-length">Length (Lambai)</label>
+											<input type="text" id="tf-order-m-length" name="length" class="tf-input" placeholder='e.g. 40"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-chest">Chest (Chati)</label>
+											<input type="text" id="tf-order-m-chest" name="chest" class="tf-input" placeholder='e.g. 38"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-waist">Waist (Kamar)</label>
+											<input type="text" id="tf-order-m-waist" name="waist" class="tf-input" placeholder='e.g. 34"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-hip">Hip</label>
+											<input type="text" id="tf-order-m-hip" name="hip" class="tf-input" placeholder='e.g. 40"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-shoulder">Shoulder (Teera)</label>
+											<input type="text" id="tf-order-m-shoulder" name="shoulder" class="tf-input" placeholder='e.g. 18"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-sleeves">Sleeves (Aasteen)</label>
+											<input type="text" id="tf-order-m-sleeves" name="sleeves" class="tf-input" placeholder='e.g. 24"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-neck">Neck (Gala)</label>
+											<input type="text" id="tf-order-m-neck" name="neck" class="tf-input" placeholder='e.g. 15.5"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-shalwar-length">Shalwar Length</label>
+											<input type="text" id="tf-order-m-shalwar-length" name="shalwar_length" class="tf-input" placeholder='e.g. 38"'>
+										</div>
+										<div class="tf-form-group">
+											<label for="tf-order-m-paucha">Paucha (Pancha)</label>
+											<input type="text" id="tf-order-m-paucha" name="paucha" class="tf-input" placeholder='e.g. 8.5"'>
+										</div>
+									</div>
+								</div>
+							
+
+							<div class="tf-form-group">
+								<label for="tf-order-garment-type">Garment Type</label>
+								<select id="tf-order-garment-type" name="garment_type" class="tf-input">
+									<option value="Kameez Shalwar">Kameez Shalwar</option>
+									<option value="2-Piece Suit">2-Piece Suit</option>
+									<option value="3-Piece Suit">3-Piece Suit</option>
+									<option value="Sherwani">Sherwani</option>
+									<option value="Waistcoat">Waistcoat</option>
+									<option value="Kurta Pajama">Kurta Pajama</option>
+								</select>
+							</div>
+
+							<div class="tf-form-group">
+								<label for="tf-order-quantity">Quantity</label>
+								<input type="number" id="tf-order-quantity" name="quantity" class="tf-input" value="1" min="1">
+							</div>
+
+							<div class="tf-form-group">
+								<label for="tf-order-trial-date">Trial Date</label>
+								<input type="date" id="tf-order-trial-date" name="trial_date" class="tf-input">
+							</div>
+
+							<div class="tf-form-group">
+								<label for="tf-order-delivery-date">Delivery Date</label>
+								<input type="date" id="tf-order-delivery-date" name="delivery_date" class="tf-input">
+							</div>
+
+							<div class="tf-form-group">
+								<label for="tf-order-total-amount">Total Amount (PKR) <span class="tf-required">*</span></label>
+								<input type="number" id="tf-order-total-amount" name="total_amount" class="tf-input" placeholder="e.g. 3500" step="0.01" required>
+							</div>
+
+							<div class="tf-form-group">
+								<label for="tf-order-advance-amount">Advance Paid (PKR)</label>
+								<input type="number" id="tf-order-advance-amount" name="advance_amount" class="tf-input" placeholder="e.g. 1000" step="0.01" value="0">
+							</div>
+
+							<div class="tf-form-group col-span-2">
+								<label for="tf-order-stage">Initial Order Stage</label>
+								<select id="tf-order-stage" name="stage" class="tf-input">
+									<option value="received">Received</option>
+									<option value="cutting">Cutting</option>
+									<option value="stitching">Stitching</option>
+									<option value="pressing">Pressing</option>
+									<option value="ready">Ready</option>
+									<option value="delivered">Delivered</option>
+								</select>
+							</div>
+
+							<div class="tf-form-group col-span-2">
+								<label for="tf-order-cloth-details">Cloth & Fabric Details</label>
+								<textarea id="tf-order-cloth-details" name="cloth_details" class="tf-input" rows="2" placeholder="Fabric color, brand, cloth meter length..."></textarea>
+							</div>
+
+							<div class="tf-form-group col-span-2">
+								<label for="tf-order-special-notes">Special Instructions</label>
+								<textarea id="tf-order-special-notes" name="special_notes" class="tf-input" rows="2" placeholder="Urgent delivery, collar shape, special cuff..."></textarea>
+							</div>
+
+							<div id="tf-order-notice" class="tf-notice col-span-2" style="display: none;"></div>
+
+							<div class="tf-form-actions col-span-2">
+								<button type="submit" id="tf-create-order-btn" class="tf-btn tf-btn-primary">
+									<span class="dashicons dashicons-printer"></span>
+									<span>Save Order & Print Invoice</span>
+								</button>
+								<button type="button" class="tf-btn tf-btn-secondary" data-switch-tab="overview">Cancel</button>
+							</div>
+						</form>
+					</div>
+				</section>
+			
+
+			<!-- TAB 3: CUSTOMERS -->
+			
+				<section id="tf-tab-customers" class="tf-tab-content">
+					<div class="tf-page-header">
+						<div>
+							<h1>Customer Directory & Measurements</h1>
+							<p>Manage customer profiles and custom measurement logs</p>
+						</div>
+						<button id="tf-toggle-customer-form" class="tf-btn tf-btn-accent">
+							<span class="dashicons dashicons-plus-alt2"></span>
+							<span>Add New Customer</span>
+						</button>
+					</div>
+
+					<!-- Add Customer Form Card -->
+					<div id="tf-customer-form-card" class="tf-glass-card" style="display: none;">
+						<div class="tf-card-header">
+							<h3>Add New Customer</h3>
+							<button id="tf-close-customer-form" class="tf-btn-icon"><span class="dashicons dashicons-no-alt"></span></button>
+						</div>
+						<form id="tf-add-customer-form" class="tf-form-grid">
+							<div class="tf-form-group">
+								<label for="tf-cust-name">Full Name <span class="tf-required">*</span></label>
+								<input type="text" id="tf-cust-name" name="name" class="tf-input" placeholder="e.g. Muhammad Ali" required>
+							</div>
+
+							<div class="tf-form-group">
+								<label for="tf-cust-phone">Phone Number <span class="tf-required">*</span></label>
+								<input type="text" id="tf-cust-phone" name="phone" class="tf-input" placeholder="e.g. 0300-1234567" required>
+							</div>
+
+							<div class="tf-form-group col-span-2">
+								<label for="tf-cust-city">City</label>
+								<input type="text" id="tf-cust-city" name="city" class="tf-input" placeholder="e.g. Lahore, Karachi, Islamabad">
+							</div>
+
+							<div class="tf-form-actions col-span-2">
+								<button type="submit" id="tf-save-customer-btn" class="tf-btn tf-btn-primary">
+									<span class="dashicons dashicons-saved"></span>
+									<span>Save Customer</span>
+								</button>
+								<button type="button" id="tf-cancel-customer-form" class="tf-btn tf-btn-secondary">Cancel</button>
+							</div>
+						</form>
+						<div id="tf-customer-notice" class="tf-notice" style="display: none; margin-top: 15px;"></div>
+					</div>
+
+					<!-- Customer Table -->
+					<div class="tf-glass-card">
+						<div class="tf-table-responsive">
+							<table class="tf-table" id="tf-customers-table">
+								<thead>
+									<tr>
+										<th>Code</th>
+										<th>Name</th>
+										<th>Phone</th>
+										<th>City</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody id="tf-customers-tbody"></tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+			
+
+			<!-- TAB 4: KARIGAR LEDGER -->
+			
+				<section id="tf-tab-karigar-ledger" class="tf-tab-content">
+					<div class="tf-page-header">
+						<div>
+							<h1>Karigar Wage Ledger</h1>
+							<p>Track stitching wages, advances, payouts and artisan balances</p>
+						</div>
+					</div>
+
+					<div class="tf-glass-card">
+						<div class="tf-table-responsive">
+							<table class="tf-table">
+								<thead>
+									<tr>
+										<th>Karigar Name</th>
+										<th>Specialization</th>
+										<th>Completed Suits</th>
+										<th>Earned Wages</th>
+										<th>Advance Taken</th>
+										<th>Net Payable</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><strong>Ustad Rashid</strong></td>
+										<td>Coat & Suit Master</td>
+										<td>14 Suits</td>
+										<td>PKR 28,000</td>
+										<td>PKR 5,000</td>
+										<td><strong class="tf-text-green">PKR 23,000</strong></td>
+										<td><button class="tf-btn-sm">Pay Balance</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+			
+
+			<!-- TAB 5: REPORTS -->
+			
+				<section id="tf-tab-reports" class="tf-tab-content">
+					<div class="tf-page-header">
+						<div>
+							<h1>Shop Reports & Financial Analytics</h1>
+							<p id="tf-report-period-subtitle">Real-time revenue, customer balances, and Karigar wage analytics</p>
+						</div>
+					</div>
+
+					<!-- Date Filters Card -->
+					<div class="tf-glass-card">
+						<div class="tf-card-header">
+							<h3><span class="dashicons dashicons-filter"></span> Date & Period Filters</h3>
+						</div>
+						<form id="tf-reports-filter-form" class="tf-form-grid">
+							<div class="tf-form-group">
+								<label for="tf-report-type">Report Type</label>
+								<select id="tf-report-type" name="report_type" class="tf-input">
+									<option value="all_time">All-Time Summary</option>
+									<option value="monthly" selected>Monthly Report</option>
+									<option value="yearly">Yearly Report</option>
+									<option value="custom">Custom Date Range</option>
+								</select>
+							</div>
+
+							<!-- Monthly Input -->
+							<div id="tf-filter-monthly-wrap" class="tf-form-group">
+								<label for="tf-report-month">Select Month</label>
+								<input type="month" id="tf-report-month" name="month" class="tf-input" value="">
+							</div>
+
+							<!-- Yearly Input -->
+							<div id="tf-filter-yearly-wrap" class="tf-form-group" style="display: none;">
+								<label for="tf-report-year">Select Year</label>
+								<select id="tf-report-year" name="year" class="tf-input">
+									
+									
+										<option value=""></option>
+									
+								</select>
+							</div>
+
+							<!-- Custom Date Range Inputs -->
+							<div id="tf-filter-custom-start-wrap" class="tf-form-group" style="display: none;">
+								<label for="tf-report-start-date">Start Date</label>
+								<input type="date" id="tf-report-start-date" name="start_date" class="tf-input" value="">
+							</div>
+
+							<div id="tf-filter-custom-end-wrap" class="tf-form-group" style="display: none;">
+								<label for="tf-report-end-date">End Date</label>
+								<input type="date" id="tf-report-end-date" name="end_date" class="tf-input" value="">
+							</div>
+
+							<div class="tf-form-actions col-span-2">
+								<button type="submit" id="tf-apply-report-btn" class="tf-btn tf-btn-primary">
+									<span class="dashicons dashicons-update"></span>
+									<span>Apply Filter via AJAX</span>
+								</button>
+							</div>
+						</form>
+					</div>
+
+					<!-- Reports Financial Stats Cards -->
+					<div class="tf-stats-grid">
+						<div class="tf-glass-card tf-stat-card">
+							<div class="tf-stat-icon icon-blue">
+								<span class="dashicons dashicons-money-alt"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Total Revenue</span>
+								<h3 class="tf-stat-value">PKR <span id="tf-rep-revenue"></span></h3>
+								<span class="tf-stat-trend positive">Gross Sales Value</span>
+							</div>
+						</div>
+
+						<div class="tf-glass-card tf-stat-card">
+							<div class="tf-stat-icon icon-green">
+								<span class="dashicons dashicons-yes-alt"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Advance Received</span>
+								<h3 class="tf-stat-value">PKR <span id="tf-rep-advance"></span></h3>
+								<span class="tf-stat-trend positive">Collected Cash</span>
+							</div>
+						</div>
+
+						<div class="tf-glass-card tf-stat-card">
+							<div class="tf-stat-icon icon-amber">
+								<span class="dashicons dashicons-clock"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Customer Pending Balance</span>
+								<h3 class="tf-stat-value">PKR <span id="tf-rep-pending-balance"></span></h3>
+								<span class="tf-stat-trend warning">Receivable on Delivery</span>
+							</div>
+						</div>
+
+						<div class="tf-glass-card tf-stat-card">
+							<div class="tf-stat-icon icon-purple">
+								<span class="dashicons dashicons-awards"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Karigar Wages Paid</span>
+								<h3 class="tf-stat-value">PKR <span id="tf-rep-karigar-paid"></span></h3>
+								<span class="tf-stat-trend positive">Disbursed Wages</span>
+							</div>
+						</div>
+
+						<div class="tf-glass-card tf-stat-card">
+							<div class="tf-stat-icon icon-blue" style="background: linear-gradient(135deg, #dc2626, #ef4444);">
+								<span class="dashicons dashicons-warning"></span>
+							</div>
+							<div class="tf-stat-details">
+								<span class="tf-stat-label">Karigar Pending Wages</span>
+								<h3 class="tf-stat-value">PKR <span id="tf-rep-karigar-pending"></span></h3>
+								<span class="tf-stat-trend warning">Payable to Artisans</span>
+							</div>
+						</div>
+					</div>
+				</section>
+			
+
+			<!-- TAB 6: USER ROLES MANAGER & ACTIVITY LOGS (Owner Only) -->
+			
+				<section id="tf-tab-user-roles" class="tf-tab-content">
+					<div class="tf-page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+						<div>
+							<h1>User Role Manager & Audit Security</h1>
+							<p>Manage staff permissions, active status and view immutable activity logs (Owner Access Only)</p>
+						</div>
+						<button class="tf-btn tf-btn-accent" id="tf-open-add-user-btn">
+							<span class="dashicons dashicons-plus-alt"></span>
+							<span>Add New Staff</span>
+						</button>
+					</div>
+
+					<!-- User Role Assignment Table -->
+					<div class="tf-glass-card">
+						<div class="tf-card-header">
+							<h3><span class="dashicons dashicons-shield"></span> Manage WordPress Staff Roles & Permissions</h3>
+						</div>
+
+						<!-- Search & Role / Status Filter Bar -->
+						<div class="tf-form-grid" style="margin-bottom: 20px; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
+							<div class="tf-form-group">
+								<label for="tf-staff-search"><span class="dashicons dashicons-search"></span> Search Staff</label>
+								<input type="text" id="tf-staff-search" class="tf-input" placeholder="Search by Name, Username, or Mobile...">
+							</div>
+							<div class="tf-form-group">
+								<label for="tf-staff-role-filter"><span class="dashicons dashicons-filter"></span> Filter by Role</label>
+								<select id="tf-staff-role-filter" class="tf-input">
+									<option value="all">All Roles</option>
+									<option value="tf_owner">Owner</option>
+									<option value="tf_manager">Manager</option>
+									<option value="tf_receptionist">Receptionist</option>
+									<option value="tf_karigar">Karigar</option>
+									<option value="tf_cashier">Cashier</option>
+								</select>
+							</div>
+							<div class="tf-form-group">
+								<label for="tf-staff-status-filter"><span class="dashicons dashicons-filter"></span> Filter by Status</label>
+								<select id="tf-staff-status-filter" class="tf-input">
+									<option value="all">All Statuses</option>
+									<option value="active">Active</option>
+									<option value="inactive">Inactive</option>
+								</select>
+							</div>
+						</div>
+
+						<div id="tf-staff-notice" class="tf-notice" style="display: none; margin-bottom: 16px;"></div>
+
+						<div class="tf-table-responsive">
+							<table class="tf-table" id="tf-staff-roles-table">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Username</th>
+										<th>Mobile</th>
+										<th>Role</th>
+										<th>Status</th>
+										<th>Last Login</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody id="tf-staff-tbody"></tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Activity Logs Table -->
+					<div class="tf-glass-card" style="margin-top: 30px;">
+						<div class="tf-card-header">
+							<h3><span class="dashicons dashicons-list-view"></span> Security Audit Activity Logs</h3>
+						</div>
+						<div class="tf-table-responsive">
+							<table class="tf-table">
+								<thead>
+									<tr>
+										<th>Action Type</th>
+										<th>Performed By</th>
+										<th>Target User</th>
+										<th>Previous State</th>
+										<th>New State / Details</th>
+										<th>Date & Time</th>
+										<th>IP Address</th>
+									</tr>
+								</thead>
+								<tbody id="tf-activity-logs-tbody">
+									<tr>
+										<td colspan="7" style="text-align: center; color: var(--tf-text-dim);">No activity found</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+			
+
+			<!-- TAB 7: SETTINGS (Owner/Admin Only) -->
+			
+				<section id="tf-tab-settings" class="tf-tab-content">
+					<div class="tf-page-header">
+						<div>
+							<h1>Shop & System Settings</h1>
+							<p>Configure company profile, logo, receipt footer, currency, and timezone</p>
+						</div>
+					</div>
+
+					<div class="tf-glass-card" style="max-width: 800px;">
+						<form id="tf-settings-form">
+							<div id="tf-settings-notice" class="tf-notice" style="display: none; margin-bottom: 20px;"></div>
+
+							<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+								<div class="tf-form-group col-span-2">
+									<label for="tf-set-company-name">Company / Shop Name <span class="tf-required">*</span></label>
+									<input type="text" id="tf-set-company-name" name="company_name" class="tf-input" value="" required>
+								</div>
+
+								<div class="tf-form-group col-span-2">
+									<label for="tf-set-logo-url">Logo Image URL</label>
+									<div style="display: flex; gap: 8px;">
+										<input type="url" id="tf-set-logo-url" name="logo_url" class="tf-input" value="" placeholder="https://example.com/logo.png">
+										<button type="button" id="tf-upload-logo-btn" class="tf-btn tf-btn-secondary" style="white-space: nowrap;">
+											<span class="dashicons dashicons-upload"></span> Upload Logo
+										</button>
+									</div>
+									<small style="color: #9ca3af; margin-top: 4px; display: block;">Image will display at the top of printed invoices and receipts.</small>
+								</div>
+
+								<div class="tf-form-group">
+									<label for="tf-set-phone">Shop Phone Number</label>
+									<input type="text" id="tf-set-phone" name="phone" class="tf-input" value="">
+								</div>
+
+								<div class="tf-form-group">
+									<label for="tf-set-currency">Currency Code / Symbol</label>
+									<input type="text" id="tf-set-currency" name="currency" class="tf-input" value="">
+								</div>
+
+								<div class="tf-form-group col-span-2">
+									<label for="tf-set-address">Shop Address</label>
+									<textarea id="tf-set-address" name="address" class="tf-input" rows="2"></textarea>
+								</div>
+
+								<div class="tf-form-group col-span-2">
+									<label for="tf-set-receipt-footer">Receipt Footer Message</label>
+									<input type="text" id="tf-set-receipt-footer" name="receipt_footer" class="tf-input" value="">
+								</div>
+
+								<div class="tf-form-group col-span-2">
+									<label for="tf-set-timezone">Timezone</label>
+									
+									<select id="tf-set-timezone" name="timezone" class="tf-input">
+										<option value="Asia/Karachi">Asia/Karachi (PKT +05:00)</option>
+										<option value="UTC">UTC</option>
+										<option value="Asia/Dubai">Asia/Dubai (+04:00)</option>
+										<option value="Europe/London">Europe/London</option>
+										<option value="America/New_York">America/New_York</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="tf-form-actions" style="margin-top: 24px;">
+								<button type="submit" id="tf-save-settings-btn" class="tf-btn tf-btn-primary">
+									<span class="dashicons dashicons-saved"></span> Save Shop Settings
+								</button>
+							</div>
+						</form>
+					</div>
+				</section>
+			
+
+		</div>
+
+		<!-- Footer -->
+		<footer class="tf-app-footer">
+			<p>Designed and Developed by <strong>Hammad Memon</strong></p>
+		</footer>
+	</main>
+</div>
+
+<!-- ==========================================================================
+     ROLE CONFIRMATION MODAL
+     ========================================================================== -->
+<div id="tf-role-confirm-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container tf-glass-card" style="max-width: 500px;">
+		<div class="tf-modal-header">
+			<div>
+				<h3 style="color: #f59e0b;"><span class="dashicons dashicons-warning" style="font-size: 24px; vertical-align: middle;"></span> Confirm Role Change</h3>
+				<p class="tf-modal-subtitle">Security Authorization Required</p>
+			</div>
+			<button id="tf-close-role-confirm-modal" class="tf-btn-icon" aria-label="Close Modal">
+				<span class="dashicons dashicons-no-alt"></span>
+			</button>
+		</div>
+
+		<div style="padding: 10px 0;">
+			<div style="background: rgba(255,255,255,0.04); padding: 14px; border-radius: 8px; border: 1px solid var(--tf-border); margin-bottom: 16px;">
+				<p style="margin-bottom: 6px; font-size: 0.9rem;">Target User: <strong id="tf-confirm-target-user" style="color: #ffffff;">-</strong></p>
+				<p style="margin-bottom: 6px; font-size: 0.9rem;">Current Role: <strong id="tf-confirm-current-role" style="color: #fbbf24;">-</strong></p>
+				<p style="font-size: 0.9rem;">New Role: <strong id="tf-confirm-new-role" style="color: #34d399;">-</strong></p>
+			</div>
+
+			<p style="font-size: 0.85rem; color: var(--tf-text-muted); margin-bottom: 10px;">
+				Please type <strong style="color: #ef4444; letter-spacing: 1px;">CONFIRM</strong> below to authorize this role modification:
+			</p>
+			<input type="text" id="tf-role-confirm-input" class="tf-input" placeholder="Type CONFIRM here..." autocomplete="off">
+		</div>
+
+		<div class="tf-modal-footer">
+			<button type="button" id="tf-execute-role-change-btn" class="tf-btn tf-btn-primary" disabled style="opacity: 0.5;">
+				<span class="dashicons dashicons-saved"></span>
+				<span>Confirm & Save Role</span>
+			</button>
+			<button type="button" id="tf-cancel-role-confirm-modal" class="tf-btn tf-btn-secondary">Cancel</button>
+		</div>
+	</div>
+</div>
+
+<!-- ==========================================================================
+     MEASUREMENT MODAL
+     ========================================================================== -->
+<div id="tf-measurement-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container tf-glass-card">
+		<div class="tf-modal-header">
+			<div>
+				<h3>Customer Measurements</h3>
+				<p id="tf-modal-customer-subtitle" class="tf-modal-subtitle">Customer: <strong id="tf-modal-customer-name">Name</strong></p>
+			</div>
+			<button id="tf-close-measurement-modal" class="tf-btn-icon" aria-label="Close Modal">
+				<span class="dashicons dashicons-no-alt"></span>
+			</button>
+		</div>
+
+		<form id="tf-measurement-form">
+			<input type="hidden" id="tf-m-customer-id" name="customer_id" value="0">
+
+			<div class="tf-measurement-grid">
+				<div class="tf-form-group">
+					<label for="tf-m-length">Length (Lambai)</label>
+					<input type="text" id="tf-m-length" name="length" class="tf-input" placeholder='e.g. 40"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-chest">Chest (Chati)</label>
+					<input type="text" id="tf-m-chest" name="chest" class="tf-input" placeholder='e.g. 38"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-waist">Waist (Kamar)</label>
+					<input type="text" id="tf-m-waist" name="waist" class="tf-input" placeholder='e.g. 34"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-hip">Hip</label>
+					<input type="text" id="tf-m-hip" name="hip" class="tf-input" placeholder='e.g. 40"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-shoulder">Shoulder (Teera)</label>
+					<input type="text" id="tf-m-shoulder" name="shoulder" class="tf-input" placeholder='e.g. 18"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-sleeves">Sleeves (Aasteen)</label>
+					<input type="text" id="tf-m-sleeves" name="sleeves" class="tf-input" placeholder='e.g. 24"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-neck">Neck (Gala)</label>
+					<input type="text" id="tf-m-neck" name="neck" class="tf-input" placeholder='e.g. 15.5"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-shalwar-length">Shalwar Length</label>
+					<input type="text" id="tf-m-shalwar-length" name="shalwar_length" class="tf-input" placeholder='e.g. 38"'>
+				</div>
+
+				<div class="tf-form-group">
+					<label for="tf-m-paucha">Paucha (Pancha)</label>
+					<input type="text" id="tf-m-paucha" name="paucha" class="tf-input" placeholder='e.g. 8.5"'>
+				</div>
+
+				<div class="tf-form-group col-span-3">
+					<label for="tf-m-notes">Special Instructions & Notes</label>
+					<textarea id="tf-m-notes" name="notes" class="tf-input" rows="3" placeholder="Double stitching, side pocket requirement, cuff design..."></textarea>
+				</div>
+			</div>
+
+			<div id="tf-measurement-notice" class="tf-notice" style="display: none; margin-top: 15px;"></div>
+
+			<div class="tf-modal-footer">
+				
+					<button type="submit" id="tf-save-measurement-btn" class="tf-btn tf-btn-primary">
+						<span class="dashicons dashicons-saved"></span>
+						<span>Save Measurements</span>
+					</button>
+				
+				<button type="button" id="tf-cancel-measurement-modal" class="tf-btn tf-btn-secondary">Close</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- ==========================================================================
+     PRINTABLE INVOICE MODAL
+     ========================================================================== -->
+<div id="tf-invoice-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container tf-glass-card tf-invoice-container">
+		<div class="tf-modal-header no-print">
+			<h3>Order Booking Receipt & Invoice</h3>
+			<button id="tf-close-invoice-modal" class="tf-btn-icon" aria-label="Close Modal">
+				<span class="dashicons dashicons-no-alt"></span>
+			</button>
+		</div>
+
+		<!-- Printable Receipt Card -->
+		<div id="tf-invoice-printable-area" class="tf-receipt-card">
+			<div class="tf-receipt-header">
+				
+				<div id="tf-inv-logo-wrapper" style="text-align: center; margin-bottom: 8px; ">
+					<img id="tf-inv-logo-img" src="" alt="Logo" style="max-height: 50px; max-width: 180px; object-fit: contain;">
+				</div>
+				<h2 id="tf-inv-shop-name"></h2>
+				<p id="tf-inv-shop-info">
+					<span id="tf-inv-shop-phone"></span>
+					<span id="tf-inv-shop-addr-sep"></span>
+					<span id="tf-inv-shop-address"></span>
+				</p>
+				<div class="tf-receipt-order-no" id="tf-inv-order-no">TF-2026-0001</div>
+			</div>
+
+			<div class="tf-receipt-body">
+				<div class="tf-receipt-row">
+					<span>Booking Date:</span> <strong id="tf-inv-booking-date">-</strong>
+				</div>
+				<div class="tf-receipt-row">
+					<span>Trial Date:</span> <strong id="tf-inv-trial-date">-</strong>
+				</div>
+				<div class="tf-receipt-row">
+					<span>Delivery Date:</span> <strong id="tf-inv-delivery-date">-</strong>
+				</div>
+				<div class="tf-receipt-divider"></div>
+
+				<div class="tf-receipt-row">
+					<span>Customer Name:</span> <strong id="tf-inv-cust-name">-</strong>
+				</div>
+				<div class="tf-receipt-row">
+					<span>Phone Number:</span> <strong id="tf-inv-cust-phone">-</strong>
+				</div>
+				<div class="tf-receipt-divider"></div>
+
+				<div class="tf-receipt-row">
+					<span>Garment Type:</span> <strong id="tf-inv-garment">-</strong>
+				</div>
+				<div class="tf-receipt-row">
+					<span>Quantity:</span> <strong id="tf-inv-qty">-</strong>
+				</div>
+				<div class="tf-receipt-divider"></div>
+
+				<div class="tf-receipt-row">
+					<span>Total Amount:</span> <strong><span class="tf-inv-currency"><span class="tf-inv-currency">PKR</span></span> <span id="tf-inv-total">0.00</span></strong>
+				</div>
+				<div class="tf-receipt-row">
+					<span>Advance Paid:</span> <strong class="tf-text-green"><span class="tf-inv-currency"><span class="tf-inv-currency">PKR</span></span> <span id="tf-inv-advance">0.00</span></strong>
+				</div>
+				<div class="tf-receipt-row tf-receipt-total">
+					<span>Balance Due:</span> <strong><span class="tf-inv-currency"><span class="tf-inv-currency">PKR</span></span> <span id="tf-inv-balance">0.00</span></strong>
+				</div>
+
+				<div id="tf-inv-notes-wrapper" class="tf-receipt-notes" style="display: none; margin-top: 12px;">
+					<small>Special Instructions:</small>
+					<p id="tf-inv-notes"></p>
+				</div>
+			</div>
+
+			<div class="tf-receipt-footer">
+				<p id="tf-inv-receipt-footer"><span id="tf-inv-receipt-footer">Thank you for choosing Tailor Flow PK!</span></p>
+				<small>Designed and Developed by <strong>Hammad Memon</strong></small>
+			</div>
+		</div>
+
+		<div class="tf-modal-footer no-print">
+			<button type="button" id="tf-print-invoice-btn" class="tf-btn tf-btn-primary">
+				<span class="dashicons dashicons-printer"></span>
+				<span>Print Receipt</span>
+			</button>
+			<button type="button" id="tf-done-invoice-btn" class="tf-btn tf-btn-secondary">Done</button>
+		</div>
+	</div>
+</div>
+
+<!-- Add Staff User Modal -->
+<div id="tf-add-user-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container tf-glass-card" style="max-width: 520px;">
+		<div class="tf-modal-header">
+			<div>
+				<h3><span class="dashicons dashicons-admin-users" style="font-size: 22px; width: 22px; height: 22px; vertical-align: middle; margin-right: 6px;"></span> Create New Staff User</h3>
+				<p class="tf-modal-subtitle">Add a new staff member to Tailor Flow PK</p>
+			</div>
+			<button type="button" id="tf-close-add-user-modal" class="tf-btn-icon" aria-label="Close Modal">
+				<span class="dashicons dashicons-no-alt"></span>
+			</button>
+		</div>
+		<form id="tf-add-user-form">
+			<div class="tf-modal-body">
+				<div id="tf-add-user-notice" class="tf-notice" style="display: none; margin-bottom: 16px;"></div>
+
+				<div class="tf-form-group" style="margin-bottom: 14px;">
+					<label for="tf-new-user-name">Full Name <span class="tf-required">*</span></label>
+					<input type="text" id="tf-new-user-name" class="tf-input" placeholder="e.g. Ali Ahmed" required>
+				</div>
+
+				<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 14px; gap: 12px;">
+					<div class="tf-form-group">
+						<label for="tf-new-user-username">Username <span class="tf-required">*</span></label>
+						<input type="text" id="tf-new-user-username" class="tf-input" placeholder="e.g. aliahmed" required>
+					</div>
+					<div class="tf-form-group">
+						<label for="tf-new-user-phone">Mobile / Phone</label>
+						<input type="text" id="tf-new-user-phone" class="tf-input" placeholder="03001234567">
+					</div>
+				</div>
+
+				<div class="tf-form-group" style="margin-bottom: 14px;">
+					<label for="tf-new-user-email">Email Address <span class="tf-required">*</span></label>
+					<input type="email" id="tf-new-user-email" class="tf-input" placeholder="ali@example.com" required>
+				</div>
+
+				<div class="tf-form-group" style="margin-bottom: 14px;">
+					<label for="tf-new-user-password">Password <span class="tf-required">*</span></label>
+					<input type="password" id="tf-new-user-password" class="tf-input" placeholder="Enter secure password" required>
+				</div>
+
+				<div class="tf-form-group" style="margin-bottom: 20px;">
+					<label for="tf-new-user-role">Tailor Flow Role <span class="tf-required">*</span></label>
+					<select id="tf-new-user-role" class="tf-input" required>
+						<option value="tf_receptionist">Receptionist</option>
+						<option value="tf_manager">Manager</option>
+						<option value="tf_karigar">Karigar</option>
+						<option value="tf_cashier">Cashier</option>
+						<option value="tf_owner">Owner</option>
+					</select>
+				</div>
+			</div>
+			<div class="tf-modal-footer">
+				<button type="submit" class="tf-btn tf-btn-accent" id="tf-save-new-user-btn">
+					<span class="dashicons dashicons-saved"></span> Create Staff User
+				</button>
+				<button type="button" class="tf-btn tf-btn-secondary" id="tf-cancel-add-user-modal">Cancel</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Order Details Modal (Module 1) -->
+<div id="tf-order-details-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container" style="max-width: 650px;">
+		<div class="tf-modal-header">
+			<h3><span class="dashicons dashicons-clipboard"></span> Order Details: <span id="tf-det-order-no">-</span></h3>
+			<button class="tf-modal-close" id="tf-close-details-modal">&times;</button>
+		</div>
+		<div class="tf-modal-body" id="tf-details-modal-content">
+			<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 16px; gap: 12px; background: rgba(0,0,0,0.2); padding: 14px; border-radius: 8px;">
+				<div>
+					<small style="color: #9ca3af; display: block;">Customer Name:</small>
+					<strong id="tf-det-cust-name" style="font-size: 15px; color: #ffffff;">-</strong>
+				</div>
+				<div>
+					<small style="color: #9ca3af; display: block;">Phone Number:</small>
+					<strong id="tf-det-cust-phone" style="font-size: 15px; color: #ffffff;">-</strong>
+				</div>
+				<div>
+					<small style="color: #9ca3af; display: block;">Garment Type:</small>
+					<strong id="tf-det-garment" style="color: #ffffff;">-</strong>
+				</div>
+				<div>
+					<small style="color: #9ca3af; display: block;">Current Stage:</small>
+					<span id="tf-det-stage" class="tf-badge badge-ready">-</span>
+				</div>
+				<div>
+					<small style="color: #9ca3af; display: block;">Trial Date:</small>
+					<span id="tf-det-trial-date" style="color: #ffffff;">-</span>
+				</div>
+				<div>
+					<small style="color: #9ca3af; display: block;">Delivery Date:</small>
+					<span id="tf-det-delivery-date" style="color: #ffffff;">-</span>
+				</div>
+			</div>
+
+			<!-- Financial Summary -->
+			<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 16px; gap: 10px; text-align: center;">
+				<div style="background: rgba(59, 130, 246, 0.15); padding: 10px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3);">
+					<small style="color: #93c5fd; display: block;">Total Amount</small>
+					<strong style="color: #60a5fa; font-size: 16px;">PKR <span id="tf-det-total">0.00</span></strong>
+				</div>
+				<div style="background: rgba(16, 185, 129, 0.15); padding: 10px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
+					<small style="color: #6ee7b7; display: block;">Advance Paid</small>
+					<strong style="color: #34d399; font-size: 16px;">PKR <span id="tf-det-advance">0.00</span></strong>
+				</div>
+				<div style="background: rgba(239, 68, 68, 0.15); padding: 10px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3);">
+					<small style="color: #fca5a5; display: block;">Remaining Balance</small>
+					<strong style="color: #f87171; font-size: 16px;">PKR <span id="tf-det-balance">0.00</span></strong>
+				</div>
+			</div>
+
+			<!-- Measurements Grid -->
+			<div style="margin-bottom: 16px;">
+				<h4 style="color: #cbd5e1; margin: 0 0 8px 0; font-size: 14px;"><span class="dashicons dashicons-edit"></span> Customer Measurements</h4>
+				<div class="tf-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 12px;" id="tf-det-measurements-grid">
+					<!-- Dynamically injected -->
+				</div>
+			</div>
+
+			<!-- Notes & Cloth Details -->
+			<div id="tf-det-notes-wrapper" style="margin-top: 12px; background: rgba(0,0,0,0.15); padding: 10px; border-radius: 6px;">
+				<small style="color: #9ca3af; display: block;">Special Instructions & Cloth Details:</small>
+				<p id="tf-det-notes" style="margin: 4px 0 0 0; color: #e2e8f0; font-size: 13px;"></p>
+			</div>
+		</div>
+		<div class="tf-modal-footer">
+			<button type="button" class="tf-btn tf-btn-secondary" id="tf-done-details-modal">Close</button>
+			<button type="button" class="tf-btn tf-btn-primary" id="tf-print-details-btn">
+				<span class="dashicons dashicons-printer"></span> Print Receipt
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Order Edit Modal (Module 2) -->
+<div id="tf-order-edit-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container" style="max-width: 650px;">
+		<div class="tf-modal-header">
+			<h3><span class="dashicons dashicons-edit"></span> Edit Order: <span id="tf-edit-order-no-title">-</span></h3>
+			<button class="tf-modal-close" id="tf-close-order-edit-modal">&times;</button>
+		</div>
+		<form id="tf-edit-order-form">
+			<input type="hidden" id="tf-edit-order-id">
+			<div class="tf-modal-body">
+				<div id="tf-edit-order-notice" class="tf-notice" style="display: none;"></div>
+
+				<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 12px; gap: 10px;">
+					<div class="tf-form-group">
+						<label for="tf-edit-garment">Garment Type</label>
+						<select id="tf-edit-garment" class="tf-input">
+							<option value="kameez_shalwar">Kameez Shalwar</option>
+							<option value="kurta_pajama">Kurta Pajama</option>
+							<option value="waistcoat">Waistcoat</option>
+							<option value="prince_coat">Prince Coat</option>
+							<option value="suit_2pc">Suit 2-Piece</option>
+							<option value="suit_3pc">Suit 3-Piece</option>
+							<option value="sherwani">Sherwani</option>
+						</select>
+					</div>
+					<div class="tf-form-group">
+						<label for="tf-edit-stage">Order Stage / Status</label>
+						<select id="tf-edit-stage" class="tf-input">
+							<option value="received">Received</option>
+							<option value="cutting">Cutting</option>
+							<option value="stitching">Stitching</option>
+							<option value="pressing">Pressing</option>
+							<option value="ready">Ready</option>
+							<option value="delivered">Delivered</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 12px; gap: 10px;">
+					<div class="tf-form-group">
+						<label for="tf-edit-trial-date">Trial Date</label>
+						<input type="date" id="tf-edit-trial-date" class="tf-input">
+					</div>
+					<div class="tf-form-group">
+						<label for="tf-edit-delivery-date">Delivery Date</label>
+						<input type="date" id="tf-edit-delivery-date" class="tf-input">
+					</div>
+				</div>
+
+				<div class="tf-form-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 12px; gap: 10px;">
+					<div class="tf-form-group">
+						<label for="tf-edit-total-amount">Total Amount (PKR)</label>
+						<input type="number" step="0.01" id="tf-edit-total-amount" class="tf-input" required>
+					</div>
+					<div class="tf-form-group">
+						<label for="tf-edit-advance-amount">Advance Paid (PKR)</label>
+						<input type="number" step="0.01" id="tf-edit-advance-amount" class="tf-input" required>
+					</div>
+				</div>
+
+				<!-- Measurements Inputs -->
+				<h4 style="color: #cbd5e1; margin: 12px 0 8px 0; font-size: 13px;">Edit Measurements (Inches)</h4>
+				<div class="tf-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+					<div class="tf-form-group"><label>Length</label><input type="text" id="tf-edit-m-length" class="tf-input"></div>
+					<div class="tf-form-group"><label>Chest</label><input type="text" id="tf-edit-m-chest" class="tf-input"></div>
+					<div class="tf-form-group"><label>Waist</label><input type="text" id="tf-edit-m-waist" class="tf-input"></div>
+					<div class="tf-form-group"><label>Hip</label><input type="text" id="tf-edit-m-hip" class="tf-input"></div>
+					<div class="tf-form-group"><label>Shoulder</label><input type="text" id="tf-edit-m-shoulder" class="tf-input"></div>
+					<div class="tf-form-group"><label>Sleeves</label><input type="text" id="tf-edit-m-sleeves" class="tf-input"></div>
+					<div class="tf-form-group"><label>Neck</label><input type="text" id="tf-edit-m-neck" class="tf-input"></div>
+					<div class="tf-form-group"><label>Shalwar L.</label><input type="text" id="tf-edit-m-shalwar" class="tf-input"></div>
+					<div class="tf-form-group"><label>Paucha</label><input type="text" id="tf-edit-m-paucha" class="tf-input"></div>
+				</div>
+
+				<div class="tf-form-group" style="margin-bottom: 12px;">
+					<label for="tf-edit-special-notes">Notes & Instructions</label>
+					<textarea id="tf-edit-special-notes" class="tf-input" rows="2"></textarea>
+				</div>
+			</div>
+			<div class="tf-modal-footer">
+				<button type="button" class="tf-btn tf-btn-secondary" id="tf-cancel-order-edit-modal">Cancel</button>
+				<button type="submit" class="tf-btn tf-btn-accent" id="tf-save-order-edit-btn">
+					<span class="dashicons dashicons-saved"></span> Save Order Changes
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Customer History Modal (Module 3) -->
+<div id="tf-customer-history-modal" class="tf-app tf-modal-overlay" style="display: none;">
+	<div class="tf-modal-container" style="max-width: 700px;">
+		<div class="tf-modal-header">
+			<h3><span class="dashicons dashicons-backup"></span> Customer Order History: <span id="tf-hist-cust-name">-</span></h3>
+			<button class="tf-modal-close" id="tf-close-history-modal">&times;</button>
+		</div>
+		<div class="tf-modal-body">
+			<div class="tf-table-responsive">
+				<table class="tf-table">
+					<thead>
+						<tr>
+							<th>Order #</th>
+							<th>Garment</th>
+							<th>Delivery</th>
+							<th>Stage</th>
+							<th>Total</th>
+							<th>Balance</th>
+						</tr>
+					</thead>
+					<tbody id="tf-customer-history-tbody">
+						<!-- Dynamically populated -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="tf-modal-footer">
+			<button type="button" class="tf-btn tf-btn-secondary" id="tf-done-history-modal">Close</button>
+		</div>
+	</div>
+</div>
+
+
+</div>
+    <!-- JQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Standalone Script -->
+    <script src="script.js"></script>
+</body>
+</html>
